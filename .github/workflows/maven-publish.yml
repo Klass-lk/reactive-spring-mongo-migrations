@@ -1,0 +1,35 @@
+name: Publish to maven central
+on:
+  release:
+    types: [ published ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Java and Maven
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Extract Version
+        run: |
+          export BUILD_TAG_PARTS=(${GITHUB_REF//// })
+          echo "VERSION=${BUILD_TAG_PARTS[-1]}" > ${GITHUB_ENV}
+      - name: set version
+        run: mvn versions:set versions:commit -DnewVersion="${VERSION}"
+
+      - name: Release Maven package
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          gpg_private_key: ${{ secrets.GPG_SIGNING_KEY }}
+          gpg_passphrase: ${{ secrets.GPG_SIGNING_PASS }}
+          nexus_username: ${{ secrets.OSSRH_USERNAME }}
+          nexus_password: ${{ secrets.OSSRH_TOKEN }}
