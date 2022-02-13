@@ -46,6 +46,13 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:git://github.com/klass-lk/reactive-spring-mongo-migrations.git</connection>
+        <developerConnection>scm:git:ssh://github.com:klass-lk/reactive-spring-mongo-migrations.git
+        </developerConnection>
+        <url>http://github.com/klass-lk/reactive-spring-mongo-migrations/tree/master</url>
+    </scm>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
