@@ -25,7 +25,7 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author danushka
@@ -40,7 +40,9 @@ public class S_20220213_SampleSeed extends MongoSeedScript {
     @Override
     public Mono<?> seed() {
         // Sample data seeder script
-        var subject = new Subject("abcd", List.of("1234"));
+        ArrayList<String> teachers = new ArrayList<>();
+        teachers.add("123");
+        Subject subject = new Subject("abcd", teachers);
         return mongoTemplate.save(subject);
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class M_20220213_SampleMigrations extends MongoMigrationScript {
     @Override
     public Mono<?> up() {
         // sample script to move teacher attribute to a teachers list
-        var subjectUpdateQuery = new Query();
+        Query subjectUpdateQuery = new Query();
         subjectUpdateQuery.addCriteria(Criteria.where("teacher").exists(true));
 
         return mongoTemplate.find(subjectUpdateQuery, Map.class, "teachers")
@@ -53,14 +54,15 @@ public class M_20220213_SampleMigrations extends MongoMigrationScript {
     }
 
     private Mono<Subject> updateTeachersAttribute(Map<String, Object> fieldValues) {
-        var teacherId = fieldValues.get("teacher");
-        var teachers = List.of(teacherId);
+        Object teacherId = fieldValues.get("teacher");
+        List<Object> teachers = new ArrayList<>();
+        teachers.add(teacherId);
 
-        var update = new Update();
+        Update update = new Update();
         update.set("teachers", teachers);
         update.unset("teacher");
 
-        var query = new Query();
+        Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(fieldValues.get("_id")));
 
         return mongoTemplate.findAndModify(query, update, Subject.class);
