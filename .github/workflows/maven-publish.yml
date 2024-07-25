@@ -33,18 +33,3 @@ jobs:
           gpg_passphrase: ${{ secrets.GPG_SIGNING_PASS }}
           nexus_username: ${{ secrets.OSSRH_USERNAME }}
           nexus_password: ${{ secrets.OSSRH_TOKEN }}
-
-  create-envfile:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v2.0
-        with:
-          envkey_SECRETS: ${{ toJSON(secrets) }}
-          file_name: .env
-          fail_on_empty: false
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: cats
-          path: .
